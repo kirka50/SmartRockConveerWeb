@@ -1,0 +1,21 @@
+.mainComp {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 15px;
+    padding: 10px;
+    border: 2px solid gray;
+
+}
+.monitor {
+    display: flex;
+    margin: 15px;
+    padding: 10px;
+    border: 2px solid gray;
+}
+
+.info {
+    display: flex;
+    margin: 15px;
+    padding: 10px;
+    border: 2px solid gray;
+}
