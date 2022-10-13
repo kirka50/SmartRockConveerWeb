@@ -1,0 +1,7 @@
+.InputLabel {
+    display: flex;
+    font-size: 14px;
+    font-style: normal;
+    color: black;
+    margin: 3px;
+}

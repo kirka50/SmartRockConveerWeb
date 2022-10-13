@@ -1,10 +1,26 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import classes from './Styles/Containers.module.css'
-const OptionsPanel = ({children}) => {
+import InputField from "./InputField";
+import ConfirmButton from "./ConfirmButton";
+
+const OptionsPanel = ({children, settings, stop}) => {
+
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(event.target[0].value)
+
+    }
+
+
+
     return (
-        <div className={classes.info}>
-            {children}
-        </div>
+        <form onSubmit={handleSubmit} className={classes.info}>
+            <InputField type="text"
+                        name="settings"
+                        ref={node => (this.inputNode = node)} >Размер негабарита:</InputField>
+            <ConfirmButton type="submit">Потвердить</ConfirmButton>
+        </form>
     );
 };
 
