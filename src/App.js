@@ -4,15 +4,15 @@ import MainContainer from "./Component/MainContainer";
 import MonitorPanel from "./Component/MonitorPanel";
 import OptionsPanel from "./Component/OptionsPanel";
 import GraphPanel from "./Component/GraphPanel";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import {wait} from "@testing-library/user-event/dist/utils";
+import { wait } from "@testing-library/user-event/dist/utils";
 import ConfirmButton from "./Component/ConfirmButton";
 import alert from './Component/alert.mp3'
-import {Player, ControlBar, BigPlayButton} from 'video-react'
+import { Player, ControlBar, BigPlayButton } from 'video-react'
 import bongo from './Component/bongo.mp4'
 import { Line } from 'react-chartjs-2';
-import {Chart as Chartjs} from 'chart.js/auto'
+import { Chart as Chartjs } from 'chart.js/auto'
 
 
 
@@ -20,9 +20,9 @@ import {Chart as Chartjs} from 'chart.js/auto'
 
 
 function App() {
-    const [hide,setHide]= useState(true)
+    const [hide, setHide] = useState(true)
     // Заранее заданные иксы и игрики
-    const [graphData,setGraphData] = useState({x:[1,2,3,4,5,6],y:[6,5,4,3,2,1]})
+    const [graphData, setGraphData] = useState({ x: [1, 2, 3, 4, 5, 6], y: [6, 5, 4, 3, 2, 1] })
     const [video, setVideo] = useState('Тест')
     const [settings, setSettings] = useState()
     const [run, setRun] = useState(true)
@@ -38,22 +38,24 @@ function App() {
     }
 
 
-    useEffect(()=>{
+    useEffect(() => {
         //расскоментируй когда будет гет запрос в видео, ссылку вставишь в этой функции
         //getData()
-    },[img,run])
+    }, [img, run])
 
 
     const stopFlow = () => {
         // Востанавливает наши ежесекундные гет запросы
-            setRun(true)
-            console.log(run)
+        setRun(true)
+        console.log(run)
         // Прячет картинку снова
-            setHide(true)
+		if (hide) {
+			setHide(false)
+		} else { setHide(true) }
     }
 
     const getData = async () => {
-        if(run){
+        if (run) {
             try {
                 await sleep(1000)
                 await axios.get('https://gold.app.sosus.org/data')
@@ -73,76 +75,68 @@ function App() {
                         }
                     }).catch(error => console.log(error))
 
-            } catch (error){
+            } catch (error) {
                 console.log(error)
             }
         }
     }
 
     // Тестовая бабуйня нужна для старого покадрового
-   /* const getImages = async () => {
-       if(run){
-           try {
-               await sleep(500)
-               await axios.get('https://gold.app.sosus.org/frame')
-                   .then(response => {
-                       console.log(response.data)
-                       setImg(response.data.frame)
-                   }).catch(error => console.log(error))
+    /* const getImages = async () => {
+        if(run){
+            try {
+                await sleep(500)
+                await axios.get('https://gold.app.sosus.org/frame')
+                    .then(response => {
+                        console.log(response.data)
+                        setImg(response.data.frame)
+                    }).catch(error => console.log(error))
+ 
+            } catch (error){
+                console.log(error)
+            }
+        }
+     }
+ */
 
-           } catch (error){
-               console.log(error)
-           }
-       }
-    }
-*/
 
 
+    return (
 
-  return (
-
-    <div className="App">
-        <MainContainer>
-            <ConfirmButton onClick={stopFlow}> Возобновить </ConfirmButton>
-            <MonitorPanel>
-                <Player
-                        fluid={false}
-                        muted={true}
-                        autoPlay={true}
-                        src={bongo}
-                >
-                    <ControlBar disableCompletely={true}/>
-                    <BigPlayButton disabled/>
-                </Player>
-                <img src={img} alt={"Негабарит"} hidden={hide}/>
-            </MonitorPanel>
-            <OptionsPanel settings={changeSettings} stop={stopFlow}/>
-        </MainContainer>
-        <MainContainer>
-           <GraphPanel>
-               <Line
-                   datasetIdKey='id'
-                   data={{
-                       labels: graphData.x,
-                       datasets: [
-                           {
-                               id: 1,
-                               label: 'Первый',
-                               data: graphData.y,
-                           },
-                           {
-                               id: 2,
-                               label: 'Второй',
-                               data: graphData.y,
-                           },
-                       ],
-                   }}
-               height={600}
-               width={1080}/>
-           </GraphPanel>
-        </MainContainer>
-    </div>
-  );
+        <div className="App">
+            <MainContainer>
+                <ConfirmButton onClick={stopFlow}> Возобновить </ConfirmButton>
+                <MonitorPanel>
+                    <img src="http://127.0.0.1:8000/next_frame" alt="http://127.0.0.1:8000/next_frame" hidden={hide}/>
+                    <img src={img} alt={"Негабарит"} hidden={hide} />
+                </MonitorPanel>
+                <OptionsPanel settings={changeSettings} stop={stopFlow} />
+            </MainContainer>
+            <MainContainer>
+                <GraphPanel>
+                    <Line
+                        datasetIdKey='id'
+                        data={{
+                            labels: graphData.x,
+                            datasets: [
+                                {
+                                    id: 1,
+                                    label: 'Первый',
+                                    data: graphData.y,
+                                },
+                                {
+                                    id: 2,
+                                    label: 'Второй',
+                                    data: graphData.y,
+                                },
+                            ],
+                        }}
+                        height={600}
+                        width={1080} />
+                </GraphPanel>
+            </MainContainer>
+        </div>
+    );
 }
 
 export default App;
