@@ -21,6 +21,7 @@ import {Chart as Chartjs} from 'chart.js/auto'
 
 function App() {
     const [hide,setHide]= useState(true)
+    // Заранее заданные иксы и игрики
     const [graphData,setGraphData] = useState({x:[1,2,3,4,5,6],y:[6,5,4,3,2,1]})
     const [video, setVideo] = useState('Тест')
     const [settings, setSettings] = useState()
@@ -38,13 +39,16 @@ function App() {
 
 
     useEffect(()=>{
+        //расскоментируй когда будет гет запрос в видео, ссылку вставишь в этой функции
         //getData()
     },[img,run])
 
 
     const stopFlow = () => {
+        // Востанавливает наши ежесекундные гет запросы
             setRun(true)
             console.log(run)
+        // Прячет картинку снова
             setHide(true)
     }
 
@@ -54,11 +58,17 @@ function App() {
                 await sleep(1000)
                 await axios.get('https://gold.app.sosus.org/data')
                     .then(response => {
+                        // Тут оно загружает видео из джсона
                         setVideo(response.data.video)
+                        // Тут оно загружает данные для графа
                         setGraphData(response.data.graph)
+                        // тут оно проверяет есть ли кадр с негабаритом
                         if (response.data.negabaritFrame === true) {
+                            // Устанавливает картинку с негабаритом в переменную из джсона
                             setImg(response.data.negabaritFrame)
+                            // Отображает эту картинку
                             setHide(false)
+                            // останавливает наши ежесекундные гет запросы
                             setRun(false)
                         }
                     }).catch(error => console.log(error))
@@ -69,7 +79,7 @@ function App() {
         }
     }
 
-
+    // Тестовая бабуйня нужна для старого покадрового
    /* const getImages = async () => {
        if(run){
            try {
