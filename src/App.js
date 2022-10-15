@@ -19,7 +19,7 @@ function App() {
     const [graphData, setGraphData] = useState({ x: [1], y: [1] })
     const [graph2Data, setGraph2Data] = useState({ x: [1,2,3,4,5,6,7], y: [10,20,5,15,23,23,11] })
     const [settings, setSettings] = useState()
-    const [run, setRun] = useState(true)
+    let [run, setRun] = useState(true)
     const [img, setImg] = useState()
 
     const sleep = ms => new Promise(
@@ -61,11 +61,11 @@ function App() {
                         if(response.data.bad_frame)
                         {
                             setImg(response.data.bad_frame)
-                            setRun(false)
+                            run = false
                             setHideFlow(true)
                             setHideBadFrame(false)
                         } else {
-							setRun(true)
+
 							setHideBadFrame(true)
 							setHideFlow(false)
 						}
@@ -73,7 +73,7 @@ function App() {
             } catch (error) {
                 console.log(error)
             }
-            getBadFrame()
+            await getBadFrame()
         }
     }
 
@@ -97,7 +97,7 @@ function App() {
             } catch (error) {
                 console.log(error)
             }
-            getGraphData()
+            await getGraphData()
         }
     }
     const getGraph2Data = async () => {
@@ -113,7 +113,7 @@ function App() {
             } catch (error) {
                 console.log(error)
             }
-            getGraph2Data()
+            await getGraph2Data()
         }
     }
 
