@@ -4,7 +4,7 @@ import InputField from "./InputField";
 import ConfirmButton from "./ConfirmButton";
 import axios from "axios";
 
-const OptionsPanel = ({children, settings, stop}) => {
+const OptionsPanel = ({children, settings, set}) => {
 
 
     const handleSubmit = (event) => {
@@ -23,7 +23,10 @@ const OptionsPanel = ({children, settings, stop}) => {
         <form onSubmit={handleSubmit} className={classes.info}>
             <InputField type="text"
                         name="settings"
-                        ref={node => (this.inputNode = node)} >Размер негабарита:</InputField>
+                        ref={node => (this.inputNode = node)}
+                        placeholder={set}
+            >Размер негабарита:</InputField>
+            Растояние между негабаритом: {children}
             <ConfirmButton type="submit">Потвердить</ConfirmButton>
         </form>
     );

@@ -22,6 +22,7 @@ function App() {
     const [graph3Data, setGraph3Data] = useState({ x: [1,2,3,4,5,6,7], y: [10,20,5,15,23,23,11] })
     const [settings, setSettings] = useState()
     const bad = useRef(true)
+    const oversizeDistance = useRef()
     const [img, setImg] = useState()
 
     const sleep = ms => new Promise(
@@ -39,7 +40,11 @@ function App() {
         getGraphData()
         getGraph3Data()
         getBadFrame()
+        getSettings()
     }, [bad])
+    useEffect(() => {
+        getSettings()
+    }, [])
 
 
     const startFlow = () => {
@@ -49,7 +54,17 @@ function App() {
         setVid('http://127.0.0.1:8000/stream')
     }
 
+    const getSettings = async () => {
+        await axios.get('http://127.0.0.1:8000/settings').then(response => {
+            setSettings(response.data.big_size)
+        })
+    }
 
+    const getOversize_distance = async () => {
+        await axios.get('http://127.0.0.1:8000/oversize_distance').then(response => {
+           oversizeDistance.current = response.data.oversize_distance
+        })
+    }
 
     const getBadFrame = async () => {
         if (bad.current) {
@@ -147,7 +162,7 @@ function App() {
                     <FlowImg src={vid} alt='Flow' height={400} width={600}/>
                     <CustomImg src={img} hidden={hideBadFrame}  height={400} width={600} />
                 </MonitorPanel>
-                <OptionsPanel settings={changeSettings} />
+                <OptionsPanel settings={changeSettings} set={settings}>{oversizeDistance.current}</OptionsPanel>
             </MainContainer>
             <MainContainer>
                 <GraphPanel>
