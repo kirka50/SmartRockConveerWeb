@@ -19,7 +19,7 @@ function App() {
     const [graphData, setGraphData] = useState({ x: [1], y: [1] })
     const [graph2Data, setGraph2Data] = useState({ x: [1,2,3,4,5,6,7], y: [10,20,5,15,23,23,11] })
     const [settings, setSettings] = useState()
-    let [run, setRun] = useState(true)
+    const [run, setRun] = useState(true)
     const [img, setImg] = useState()
 
     const sleep = ms => new Promise(
@@ -33,10 +33,10 @@ function App() {
 
 
     useEffect(() => {
-        //getGraph2Data()
-        //getGraphData()
+        getGraph2Data()
+        getGraphData()
         getBadFrame()
-    }, [])
+    }, [run])
 
 
     const startFlow = () => {
@@ -44,9 +44,6 @@ function App() {
         setRun(true)
         setHideBadFrame(true)
         axios.post('http://127.0.0.1:8000/ok').then(r => console.log(r))
-        getBadFrame()
-        //getGraphData()
-        //getGraph2Data()
         setVid('http://127.0.0.1:8000/next_frame')
     }
 
@@ -61,7 +58,7 @@ function App() {
                         if(response.data.bad_frame)
                         {
                             setImg(response.data.bad_frame)
-                            run = false
+                            setRun(false)
                             setHideFlow(true)
                             setHideBadFrame(false)
                         } else {
