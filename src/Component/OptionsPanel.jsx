@@ -9,7 +9,7 @@ const OptionsPanel = ({children, settings, stop}) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(event.target[0].value)
-        //axios.post('https://gold.app.sosus.org/settings',{event.target[0].value})
+        //axios.post('https://gold.app.sosus.org/settings',{big_size: event.target[0].value})
         //                     .then(response => {
         //                         console.log(response.data)
         //                         }
