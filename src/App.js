@@ -13,7 +13,6 @@ import BarChart from "./Component/BarChart";
 import alert from "./Component/alert.mp3"
 
 
-
 function App() {
     let audio = new Audio(alert)
     const [vid,setVid] = useState('http://127.0.0.1:8000/next_frame')
@@ -42,11 +41,10 @@ function App() {
 
 
     const startFlow = () => {
-
         bad.current = true
         setHideBadFrame(true)
-        axios.post('http://127.0.0.1:8000/ok').then(r => console.log(r))
-        setVid('http://127.0.0.1:8000/next_frame')
+        axios.post('http://127.0.0.1:8000/clear_oversize_queue').then(r => console.log(r))
+        setVid('http://127.0.0.1:8000/stream')
     }
 
 
@@ -55,11 +53,11 @@ function App() {
         if (bad.current) {
             try {
                 await sleep(1000)
-                await axios.get('http://127.0.0.1:8000/bad_frame')
+                await axios.get('http://127.0.0.1:8000/frame_with_oversize')
                     .then(response => {
-                        if(response.data.bad_frame)
+                        if(response.data.frame_url)
                         {
-                            setImg(response.data.bad_frame)
+                            setImg(response.data.frame_url)
                             bad.current = false
                             setHideBadFrame(false)
                             audio.play()
@@ -78,42 +76,41 @@ function App() {
 
 
     const getGraphData = async () => {
-        if (bad) {
-            try {
-                await sleep(1000)
-                await axios.get('https://gold.app.sosus.org/graph1')
-                    .then(response => {
-                        graphData.x.push(response.data.graph1.time)
-                        if (graphData.x.length > 60) {
-                            graphData.x.pop()
-                        }
-                        graphData.y.push(response.data.graph1.meanSize)
-                        if (graphData.y.length > 60) {
-                            graphData.y.pop()
-                        }
-                        setGraphData(graphData)
-                    }).catch(error => console.log(error))
-            } catch (error) {
-                console.log(error)
-            }
-            await getGraphData()
-        }
+		while (true) {
+			try {
+				await sleep(1000)
+				await axios.get('http://127.0.0.1:8000/average_graph')
+					.then(response => {
+						const kek = { x: graphData.x, y: graphData.y }
+						kek.x.push(response.data.time)
+						if (kek.x.length > 60) {
+							kek.x.shift()
+						}
+						kek.y.push(response.data.size)
+						if (kek.y.length > 60) {
+							kek.y.shift()
+						}
+						setGraphData(kek)
+				}).catch(error => console.log(error))
+			} catch (error) {
+				console.log(error)
+			}
+		}
     }
     const getGraph2Data = async () => {
-        if (bad) {
-            try {
-                await sleep(1000)
-                await axios.get('https://gold.app.sosus.org/graph2')
-                    .then(response => {
-                        let graph = graph2Data
-                        graph.y = response.data.graph2.y
-                        setGraph2Data(graph)
-                    }).catch(error => console.log(error))
-            } catch (error) {
-                console.log(error)
-            }
-            await getGraph2Data()
-        }
+		while (true) {
+			try {
+			await sleep(1000)
+			await axios.get('http://127.0.0.1:8000/class_sizes')
+				.then(response => {
+					const kek = { x: graph2Data.x, y: graph2Data.y }
+					kek.y = response.data.sizes
+					setGraph2Data(kek)
+				}).catch(error => console.log(error))
+			} catch (error) {
+				console.log(error)
+			}
+		}
     }
 
 
