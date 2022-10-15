@@ -13,10 +13,11 @@ import BarChart from "./Component/BarChart";
 import alert from "./Component/alert.mp3"
 
 
+
 function App() {
+    let audio = new Audio(alert)
     const [vid,setVid] = useState('http://127.0.0.1:8000/next_frame')
     const [hideBadFrame,setHideBadFrame] = useState(true)
-
     const [graphData, setGraphData] = useState({ x: [1], y: [1] })
     const [graph2Data, setGraph2Data] = useState({ x: [1,2,3,4,5,6,7], y: [10,20,5,15,23,23,11] })
     const [settings, setSettings] = useState()
@@ -61,6 +62,8 @@ function App() {
                             setImg(response.data.bad_frame)
                             bad.current = false
                             setHideBadFrame(false)
+                            audio.play()
+
                         } else {
 							bad.current = true
 							setHideBadFrame(true)
