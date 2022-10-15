@@ -1,31 +1,21 @@
-
 import './App.css';
 import MainContainer from "./Component/MainContainer";
 import MonitorPanel from "./Component/MonitorPanel";
 import OptionsPanel from "./Component/OptionsPanel";
 import GraphPanel from "./Component/GraphPanel";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
-import { wait } from "@testing-library/user-event/dist/utils";
 import ConfirmButton from "./Component/ConfirmButton";
-import alert from './Component/alert.mp3'
-import { Player, ControlBar, BigPlayButton } from 'video-react'
-import bongo from './Component/bongo.mp4'
-import { Line } from 'react-chartjs-2';
-import { Chart as Chartjs } from 'chart.js/auto'
 import FlowImg from "./Component/FlowImg";
 import LineChart from "./Component/LineChart";
 import CustomImg from "./Component/CustomImg";
 
 
-
-
-
-
 function App() {
     const [hideBadFrame,setHideBadFrame] = useState(true)
     const [hideFlow, setHideFlow] = useState(false)
-    const [graphData, setGraphData] = useState({ x: [1, 2, 3, 4, 5, 6], y: [1, 2, 3, 4, 5, 6] })
+    const [graphData, setGraphData] = useState({ x: [1], y: [1] })
+    const [graph2Data, setGraph2Data] = useState({ x: [1,2,3,4,5,6,7], y: [1] })
     const [settings, setSettings] = useState()
     const [run, setRun] = useState(true)
     const [img, setImg] = useState('2222')
@@ -41,9 +31,10 @@ function App() {
 
 
     useEffect(() => {
-
+        //getGraph2Data()
+        //getGraphData()
         //getData()
-    }, [run])
+    }, [run,graph2Data])
 
 
     const startFlow = () => {
@@ -52,28 +43,43 @@ function App() {
         setHideBadFrame(true)
     }
 
-    const getData = async () => {
+    const getGraphData = async () => {
         if (run) {
             try {
                 await sleep(1000)
-                await axios.get('https://gold.app.sosus.org/data')
+                await axios.get('https://gold.app.sosus.org/graph1')
                     .then(response => {
-                        let data = graphData
-                            data.x.push()
-                        setGraphData(response.data.graph)
-                        if (response.data.negabaritFrame == true) {
-                            setImg(response.data.negabaritFrame)
-                            setHideFlow(false)
-                            setRun(false)
-                            setHideBadFrame(false)
+                        graphData.x.push(response.data.graph1.time)
+                        if (graphData.x.length > 60) {
+                            graphData.x.pop()
                         }
+                        graphData.y.push(response.data.graph1.meanSize)
+                        if (graphData.y.length > 60) {
+                            graphData.y.pop()
+                        }
+                        setGraphData(graphData)
                     }).catch(error => console.log(error))
-
             } catch (error) {
                 console.log(error)
             }
         }
     }
+    const getGraph2Data = async () => {
+        if (run) {
+            try {
+                await sleep(1000)
+                await axios.get('https://gold.app.sosus.org/graph2')
+                    .then(response => {
+                        let graph = graph2Data
+                        graph.y = response.data.graph2.y
+                        setGraph2Data(graph)
+                    }).catch(error => console.log(error))
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
 
     return (
 
