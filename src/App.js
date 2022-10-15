@@ -120,7 +120,7 @@ function App() {
             <MainContainer>
                 <ConfirmButton onClick={startFlow}> Возобновить </ConfirmButton>
                 <MonitorPanel>
-                    <FlowImg src={vid} hidden={hideFlow} alt='Flow' height={400} width={600}/>
+                    <FlowImg src={vid} alt='Flow' height={400} width={600}/>
                     <CustomImg src={img} hidden={hideBadFrame}  height={400} width={600} />
                 </MonitorPanel>
                 <OptionsPanel settings={changeSettings} />
