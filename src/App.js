@@ -10,16 +10,17 @@ import FlowImg from "./Component/FlowImg";
 import LineChart from "./Component/LineChart";
 import CustomImg from "./Component/CustomImg";
 import BarChart from "./Component/BarChart";
+import alert from "./Component/alert.mp3"
 
 
 function App() {
     const [vid,setVid] = useState('http://127.0.0.1:8000/next_frame')
     const [hideBadFrame,setHideBadFrame] = useState(true)
-    const [hideFlow, setHideFlow] = useState(false)
+
     const [graphData, setGraphData] = useState({ x: [1], y: [1] })
     const [graph2Data, setGraph2Data] = useState({ x: [1,2,3,4,5,6,7], y: [10,20,5,15,23,23,11] })
     const [settings, setSettings] = useState()
-    const run = useRef(true)
+    const bad = useRef(true)
     const [img, setImg] = useState()
 
     const sleep = ms => new Promise(
@@ -36,12 +37,12 @@ function App() {
         getGraph2Data()
         getGraphData()
         getBadFrame()
-    }, [run])
+    }, [bad])
 
 
     const startFlow = () => {
-        setHideFlow(false)
-        run.current = true
+
+        bad.current = true
         setHideBadFrame(true)
         axios.post('http://127.0.0.1:8000/ok').then(r => console.log(r))
         setVid('http://127.0.0.1:8000/next_frame')
@@ -50,7 +51,7 @@ function App() {
 
 
     const getBadFrame = async () => {
-        if (run.current) {
+        if (bad.current) {
             try {
                 await sleep(1000)
                 await axios.get('http://127.0.0.1:8000/bad_frame')
@@ -58,13 +59,11 @@ function App() {
                         if(response.data.bad_frame)
                         {
                             setImg(response.data.bad_frame)
-                            run.current = false
-                            setHideFlow(true)
+                            bad.current = false
                             setHideBadFrame(false)
                         } else {
-							run.current = true
+							bad.current = true
 							setHideBadFrame(true)
-							setHideFlow(false)
 						}
                     }).catch(error => console.log(error))
             } catch (error) {
@@ -76,7 +75,7 @@ function App() {
 
 
     const getGraphData = async () => {
-        if (run) {
+        if (bad) {
             try {
                 await sleep(1000)
                 await axios.get('https://gold.app.sosus.org/graph1')
@@ -98,7 +97,7 @@ function App() {
         }
     }
     const getGraph2Data = async () => {
-        if (run) {
+        if (bad) {
             try {
                 await sleep(1000)
                 await axios.get('https://gold.app.sosus.org/graph2')
