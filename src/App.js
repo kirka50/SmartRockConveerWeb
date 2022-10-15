@@ -3,7 +3,7 @@ import MainContainer from "./Component/MainContainer";
 import MonitorPanel from "./Component/MonitorPanel";
 import OptionsPanel from "./Component/OptionsPanel";
 import GraphPanel from "./Component/GraphPanel";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import axios from "axios";
 import ConfirmButton from "./Component/ConfirmButton";
 import FlowImg from "./Component/FlowImg";
@@ -19,7 +19,7 @@ function App() {
     const [graphData, setGraphData] = useState({ x: [1], y: [1] })
     const [graph2Data, setGraph2Data] = useState({ x: [1,2,3,4,5,6,7], y: [10,20,5,15,23,23,11] })
     const [settings, setSettings] = useState()
-    const [run, setRun] = useState(true)
+    const run = useRef(true)
     const [img, setImg] = useState()
 
     const sleep = ms => new Promise(
@@ -41,7 +41,7 @@ function App() {
 
     const startFlow = () => {
         setHideFlow(false)
-        setRun(true)
+        run.current = true
         setHideBadFrame(true)
         axios.post('http://127.0.0.1:8000/ok').then(r => console.log(r))
         setVid('http://127.0.0.1:8000/next_frame')
@@ -50,7 +50,7 @@ function App() {
 
 
     const getBadFrame = async () => {
-        if (run) {
+        if (run.current) {
             try {
                 await sleep(1000)
                 await axios.get('http://127.0.0.1:8000/bad_frame')
@@ -58,11 +58,11 @@ function App() {
                         if(response.data.bad_frame)
                         {
                             setImg(response.data.bad_frame)
-                            setRun(false)
+                            run.current = false
                             setHideFlow(true)
                             setHideBadFrame(false)
                         } else {
-
+							run.current = true
 							setHideBadFrame(true)
 							setHideFlow(false)
 						}
