@@ -17,15 +17,6 @@ const LineChart = ({graphData}) => {
                           borderColor:'lightblue',
                           animation: false
                       },
-                      {
-                          id: 2,
-                          label: 'Второй',
-                          data: graphData.y2,
-                          backgroundColor: 'black',
-                          borderColor:'cyan',
-                          animation: false
-
-                      },
                   ],
               }}
               height={600}

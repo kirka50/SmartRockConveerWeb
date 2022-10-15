@@ -25,7 +25,7 @@ import CustomImg from "./Component/CustomImg";
 function App() {
     const [hideBadFrame,setHideBadFrame] = useState(true)
     const [hideFlow, setHideFlow] = useState(false)
-    const [graphData, setGraphData] = useState({ x: [1, 2, 3, 4, 5, 6], y: [1, 2, 3, 4, 5, 6], y2:[2, 4, 6, 8, 10, 12] })
+    const [graphData, setGraphData] = useState({ x: [1, 2, 3, 4, 5, 6], y: [1, 2, 3, 4, 5, 6] })
     const [settings, setSettings] = useState()
     const [run, setRun] = useState(true)
     const [img, setImg] = useState('2222')
@@ -58,6 +58,8 @@ function App() {
                 await sleep(1000)
                 await axios.get('https://gold.app.sosus.org/data')
                     .then(response => {
+                        let data = graphData
+                            data.x.push()
                         setGraphData(response.data.graph)
                         if (response.data.negabaritFrame == true) {
                             setImg(response.data.negabaritFrame)
@@ -79,8 +81,8 @@ function App() {
             <MainContainer>
                 <ConfirmButton onClick={startFlow}> Возобновить </ConfirmButton>
                 <MonitorPanel>
-                    <FlowImg hide={hideFlow}/>
-                    <CustomImg src={img} hide={hideBadFrame}/>
+                    <FlowImg src={""} hidden={hideFlow} alt='Flow' height={400} width={600}/>
+                    <CustomImg src={img} hidden={hideBadFrame} />
                 </MonitorPanel>
                 <OptionsPanel settings={changeSettings} />
             </MainContainer>
