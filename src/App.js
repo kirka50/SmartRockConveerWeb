@@ -34,7 +34,7 @@ function App() {
     useEffect(() => {
         //getGraph2Data()
         //getGraphData()
-        //getBadFrame()
+        getBadFrame()
     }, [])
 
 
@@ -42,10 +42,10 @@ function App() {
         setHideFlow(false)
         setRun(true)
         setHideBadFrame(true)
-        axios.post('https://gold.app.sosus.org/ok').then(r => console.log(r))
+        axios.post('http://127.0.0.1:8000/ok').then(r => console.log(r))
         getBadFrame()
-        getGraphData()
-        getGraph2Data()
+        //getGraphData()
+        //getGraph2Data()
     }
 
 
@@ -54,19 +54,20 @@ function App() {
         if (run) {
             try {
                 await sleep(1000)
-                await axios.get('https://gold.app.sosus.org/BadFrame')
+                await axios.get('http://127.0.0.1:8000/bad_frame')
                     .then(response => {
-                        if(response.data.BadFrame)
+                        if(response.data.bad_frame)
                         {
-                            setImg(response.data.BadFrame)
-                            setRun(false)
-                            setHideFlow(true)
-                            setHideBadFrame(false)
+                            setImg(response.data.bad_frame)
                         }
                     }).catch(error => console.log(error))
             } catch (error) {
                 console.log(error)
             }
+			setRun(false)
+			setHideFlow(true)
+			setHideBadFrame(false)
+			console.log(run)
             getBadFrame()
         }
     }
@@ -91,7 +92,7 @@ function App() {
             } catch (error) {
                 console.log(error)
             }
-            getGraphData()
+            //getGraphData()
         }
     }
     const getGraph2Data = async () => {
@@ -107,7 +108,7 @@ function App() {
             } catch (error) {
                 console.log(error)
             }
-            getGraph2Data()
+            //getGraph2Data()
         }
     }
 
@@ -118,8 +119,8 @@ function App() {
             <MainContainer>
                 <ConfirmButton onClick={startFlow}> Возобновить </ConfirmButton>
                 <MonitorPanel>
-                    <FlowImg src={""} hidden={hideFlow} alt='Flow' height={400} width={600}/>
-                    <CustomImg src={img} hidden={hideBadFrame} />
+                    <FlowImg src={"http://127.0.0.1:8000/next_frame"} hidden={hideFlow} alt='Flow' height={400} width={600}/>
+                    <CustomImg src={img} hidden={hideBadFrame} height={400} width={600} />
                 </MonitorPanel>
                 <OptionsPanel settings={changeSettings} />
             </MainContainer>
