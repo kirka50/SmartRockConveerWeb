@@ -3,7 +3,7 @@ import { Line } from 'react-chartjs-2';
 
 
 
-const LineChart = ({graphData}) => {
+const LineChart = ({graphData,Label}) => {
     return (
         <Line datasetIdKey='id'
               data={{
@@ -11,7 +11,7 @@ const LineChart = ({graphData}) => {
                   datasets: [
                       {
                           id: 1,
-                          label: 'Средний размер камня на время',
+                          label: {Label},
                           data: graphData.y,
                           backgroundColor: 'black',
                           borderColor:'lightblue',

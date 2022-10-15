@@ -19,6 +19,7 @@ function App() {
     const [hideBadFrame,setHideBadFrame] = useState(true)
     const [graphData, setGraphData] = useState({ x: [1], y: [1] })
     const [graph2Data, setGraph2Data] = useState({ x: [1,2,3,4,5,6,7], y: [10,20,5,15,23,23,11] })
+    const [graph3Data, setGraph3Data] = useState({ x: [1,2,3,4,5,6,7], y: [10,20,5,15,23,23,11] })
     const [settings, setSettings] = useState()
     const bad = useRef(true)
     const [img, setImg] = useState()
@@ -36,6 +37,7 @@ function App() {
     useEffect(() => {
         getGraph2Data()
         getGraphData()
+        getGraph3Data()
         getBadFrame()
     }, [bad])
 
@@ -61,7 +63,6 @@ function App() {
                             bad.current = false
                             setHideBadFrame(false)
                             audio.play()
-
                         } else {
 							bad.current = true
 							setHideBadFrame(true)
@@ -97,6 +98,7 @@ function App() {
 			}
 		}
     }
+
     const getGraph2Data = async () => {
 		while (true) {
 			try {
@@ -113,6 +115,28 @@ function App() {
 		}
     }
 
+    const getGraph3Data = async () => {
+        while (true) {
+            try {
+                await sleep(1000)
+                await axios.get('http://127.0.0.1:8000/size_graph')
+                    .then(response => {
+                        const kek = { x: graph3Data.x, y: graph3Data.y }
+                        kek.x.push(response.data.time)
+                        if (kek.x.length > 60) {
+                            kek.x.shift()
+                        }
+                        kek.y.push(response.data.size)
+                        if (kek.y.length > 60) {
+                            kek.y.shift()
+                        }
+                        setGraph3Data(kek)
+                    }).catch(error => console.log(error))
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
 
     return (
 
@@ -127,8 +151,9 @@ function App() {
             </MainContainer>
             <MainContainer>
                 <GraphPanel>
-                    <LineChart graphData={graphData}/>
+                    <LineChart graphData={graphData} Label={"Средний размер камня"}/>
                     <BarChart graph2Data={graph2Data}/>
+                    <LineChart graphData={graph3Data} Label={"Максимальный размер камня"}/>
                 </GraphPanel>
             </MainContainer>
         </div>
