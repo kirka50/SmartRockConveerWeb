@@ -59,7 +59,7 @@ function App() {
                 await axios.get('https://gold.app.sosus.org/data')
                     .then(response => {
                         setGraphData(response.data.graph)
-                        if (response.data.negabaritFrame === true) {
+                        if (response.data.negabaritFrame == true) {
                             setImg(response.data.negabaritFrame)
                             setHideFlow(false)
                             setRun(false)
@@ -72,26 +72,6 @@ function App() {
             }
         }
     }
-
-    // Тестовая бабуйня нужна для старого покадрового
-    /* const getImages = async () => {
-        if(run){
-            try {
-                await sleep(500)
-                await axios.get('https://gold.app.sosus.org/frame')
-                    .then(response => {
-                        console.log(response.data)
-                        setImg(response.data.frame)
-                    }).catch(error => console.log(error))
- 
-            } catch (error){
-                console.log(error)
-            }
-        }
-     }
- */
-
-
 
     return (
 
