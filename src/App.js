@@ -13,6 +13,9 @@ import { Player, ControlBar, BigPlayButton } from 'video-react'
 import bongo from './Component/bongo.mp4'
 import { Line } from 'react-chartjs-2';
 import { Chart as Chartjs } from 'chart.js/auto'
+import FlowImg from "./Component/FlowImg";
+import LineChart from "./Component/LineChart";
+import CustomImg from "./Component/CustomImg";
 
 
 
@@ -20,10 +23,9 @@ import { Chart as Chartjs } from 'chart.js/auto'
 
 
 function App() {
-    const [hide, setHide] = useState(true)
-    // Заранее заданные иксы и игрики
-    const [graphData, setGraphData] = useState({ x: [1, 2, 3, 4, 5, 6], y: [6, 5, 4, 3, 2, 1] })
-    const [video, setVideo] = useState('Тест')
+    const [hideBadFrame,setHideBadFrame] = useState(true)
+    const [hideFlow, setHideFlow] = useState(false)
+    const [graphData, setGraphData] = useState({ x: [1, 2, 3, 4, 5, 6], y: [1, 2, 3, 4, 5, 6], y2:[2, 4, 6, 8, 10, 12] })
     const [settings, setSettings] = useState()
     const [run, setRun] = useState(true)
     const [img, setImg] = useState('2222')
@@ -39,19 +41,15 @@ function App() {
 
 
     useEffect(() => {
-        //расскоментируй когда будет гет запрос в видео, ссылку вставишь в этой функции
+
         //getData()
-    }, [img, run])
+    }, [run])
 
 
-    const stopFlow = () => {
-        // Востанавливает наши ежесекундные гет запросы
+    const startFlow = () => {
+        setHideFlow(false)
         setRun(true)
-        console.log(run)
-        // Прячет картинку снова
-		if (hide) {
-			setHide(false)
-		} else { setHide(true) }
+        setHideBadFrame(true)
     }
 
     const getData = async () => {
@@ -60,18 +58,12 @@ function App() {
                 await sleep(1000)
                 await axios.get('https://gold.app.sosus.org/data')
                     .then(response => {
-                        // Тут оно загружает видео из джсона
-                        setVideo(response.data.video)
-                        // Тут оно загружает данные для графа
                         setGraphData(response.data.graph)
-                        // тут оно проверяет есть ли кадр с негабаритом
                         if (response.data.negabaritFrame === true) {
-                            // Устанавливает картинку с негабаритом в переменную из джсона
                             setImg(response.data.negabaritFrame)
-                            // Отображает эту картинку
-                            setHide(false)
-                            // останавливает наши ежесекундные гет запросы
+                            setHideFlow(false)
                             setRun(false)
+                            setHideBadFrame(false)
                         }
                     }).catch(error => console.log(error))
 
@@ -105,34 +97,16 @@ function App() {
 
         <div className="App">
             <MainContainer>
-                <ConfirmButton onClick={stopFlow}> Возобновить </ConfirmButton>
+                <ConfirmButton onClick={startFlow}> Возобновить </ConfirmButton>
                 <MonitorPanel>
-                    <img src="http://127.0.0.1:8000/next_frame" alt="http://127.0.0.1:8000/next_frame" hidden={hide}/>
-                    <img src={img} alt={"Негабарит"} hidden={hide} />
+                    <FlowImg hide={hideFlow}/>
+                    <CustomImg src={img} hide={hideBadFrame}/>
                 </MonitorPanel>
-                <OptionsPanel settings={changeSettings} stop={stopFlow} />
+                <OptionsPanel settings={changeSettings} />
             </MainContainer>
             <MainContainer>
                 <GraphPanel>
-                    <Line
-                        datasetIdKey='id'
-                        data={{
-                            labels: graphData.x,
-                            datasets: [
-                                {
-                                    id: 1,
-                                    label: 'Первый',
-                                    data: graphData.y,
-                                },
-                                {
-                                    id: 2,
-                                    label: 'Второй',
-                                    data: graphData.y,
-                                },
-                            ],
-                        }}
-                        height={600}
-                        width={1080} />
+                    <LineChart graphData={graphData}/>
                 </GraphPanel>
             </MainContainer>
         </div>
