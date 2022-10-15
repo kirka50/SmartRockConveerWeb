@@ -1,5 +1,10 @@
 .inputButton {
     margin-right: 3px;
-    background: white;
+    background: #ef8f5b;
     border:1px solid gray;
+    border-radius: 6px;
+}
+.inputButton:hover
+{
+    background: #d2751d;
 }
