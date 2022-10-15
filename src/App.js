@@ -13,6 +13,7 @@ import BarChart from "./Component/BarChart";
 
 
 function App() {
+    const [vid,setVid] = useState('')
     const [hideBadFrame,setHideBadFrame] = useState(true)
     const [hideFlow, setHideFlow] = useState(false)
     const [graphData, setGraphData] = useState({ x: [1], y: [1] })
@@ -32,8 +33,8 @@ function App() {
 
 
     useEffect(() => {
-        //getGraph2Data()
-        //getGraphData()
+        getGraph2Data()
+        getGraphData()
         getBadFrame()
     }, [])
 
@@ -42,10 +43,11 @@ function App() {
         setHideFlow(false)
         setRun(true)
         setHideBadFrame(true)
-        axios.post('http://127.0.0.1:8000/ok').then(r => console.log(r))
+        axios.post('https://gold.app.sosus.org/ok').then(r => console.log(r))
         getBadFrame()
-        //getGraphData()
-        //getGraph2Data()
+        getGraphData()
+        getGraph2Data()
+        setVid('')
     }
 
 
@@ -54,20 +56,19 @@ function App() {
         if (run) {
             try {
                 await sleep(1000)
-                await axios.get('http://127.0.0.1:8000/bad_frame')
+                await axios.get('https://gold.app.sosus.org/BadFrame')
                     .then(response => {
-                        if(response.data.bad_frame)
+                        if(response.data.BadFrame)
                         {
-                            setImg(response.data.bad_frame)
+                            setImg(response.data.BadFrame)
+                            setRun(false)
+                            setHideFlow(true)
+                            setHideBadFrame(false)
                         }
                     }).catch(error => console.log(error))
             } catch (error) {
                 console.log(error)
             }
-			setRun(false)
-			setHideFlow(true)
-			setHideBadFrame(false)
-			console.log(run)
             getBadFrame()
         }
     }
@@ -92,7 +93,7 @@ function App() {
             } catch (error) {
                 console.log(error)
             }
-            //getGraphData()
+            getGraphData()
         }
     }
     const getGraph2Data = async () => {
@@ -108,7 +109,7 @@ function App() {
             } catch (error) {
                 console.log(error)
             }
-            //getGraph2Data()
+            getGraph2Data()
         }
     }
 
@@ -119,8 +120,8 @@ function App() {
             <MainContainer>
                 <ConfirmButton onClick={startFlow}> Возобновить </ConfirmButton>
                 <MonitorPanel>
-                    <FlowImg src={"http://127.0.0.1:8000/next_frame"} hidden={hideFlow} alt='Flow' height={400} width={600}/>
-                    <CustomImg src={img} hidden={hideBadFrame} height={400} width={600} />
+                    <FlowImg src={vid} hidden={hideFlow} alt='Flow' height={400} width={600}/>
+                    <CustomImg src={img} hidden={hideBadFrame} />
                 </MonitorPanel>
                 <OptionsPanel settings={changeSettings} />
             </MainContainer>
