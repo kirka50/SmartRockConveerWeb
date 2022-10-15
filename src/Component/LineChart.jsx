@@ -11,7 +11,7 @@ const LineChart = ({graphData}) => {
                   datasets: [
                       {
                           id: 1,
-                          label: 'Первый',
+                          label: 'Средний размер камня на время',
                           data: graphData.y,
                           backgroundColor: 'black',
                           borderColor:'lightblue',

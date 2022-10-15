@@ -9,16 +9,17 @@ import ConfirmButton from "./Component/ConfirmButton";
 import FlowImg from "./Component/FlowImg";
 import LineChart from "./Component/LineChart";
 import CustomImg from "./Component/CustomImg";
+import BarChart from "./Component/BarChart";
 
 
 function App() {
     const [hideBadFrame,setHideBadFrame] = useState(true)
     const [hideFlow, setHideFlow] = useState(false)
     const [graphData, setGraphData] = useState({ x: [1], y: [1] })
-    const [graph2Data, setGraph2Data] = useState({ x: [1,2,3,4,5,6,7], y: [1] })
+    const [graph2Data, setGraph2Data] = useState({ x: [1,2,3,4,5,6,7], y: [10,20,5,15,23,23,11] })
     const [settings, setSettings] = useState()
     const [run, setRun] = useState(true)
-    const [img, setImg] = useState('2222')
+    const [img, setImg] = useState()
 
     const sleep = ms => new Promise(
         resolve => setTimeout(resolve, ms)
@@ -33,15 +34,43 @@ function App() {
     useEffect(() => {
         //getGraph2Data()
         //getGraphData()
-        //getData()
-    }, [run,graph2Data])
+        //getBadFrame()
+    }, [])
 
 
     const startFlow = () => {
         setHideFlow(false)
         setRun(true)
         setHideBadFrame(true)
+        axios.post('https://gold.app.sosus.org/ok').then(r => console.log(r))
+        getBadFrame()
+        getGraphData()
+        getGraph2Data()
     }
+
+
+
+    const getBadFrame = async () => {
+        if (run) {
+            try {
+                await sleep(1000)
+                await axios.get('https://gold.app.sosus.org/BadFrame')
+                    .then(response => {
+                        if(response.data.BadFrame)
+                        {
+                            setImg(response.data.BadFrame)
+                            setRun(false)
+                            setHideFlow(true)
+                            setHideBadFrame(false)
+                        }
+                    }).catch(error => console.log(error))
+            } catch (error) {
+                console.log(error)
+            }
+            getBadFrame()
+        }
+    }
+
 
     const getGraphData = async () => {
         if (run) {
@@ -62,6 +91,7 @@ function App() {
             } catch (error) {
                 console.log(error)
             }
+            getGraphData()
         }
     }
     const getGraph2Data = async () => {
@@ -77,6 +107,7 @@ function App() {
             } catch (error) {
                 console.log(error)
             }
+            getGraph2Data()
         }
     }
 
@@ -95,6 +126,7 @@ function App() {
             <MainContainer>
                 <GraphPanel>
                     <LineChart graphData={graphData}/>
+                    <BarChart graph2Data={graph2Data}/>
                 </GraphPanel>
             </MainContainer>
         </div>
