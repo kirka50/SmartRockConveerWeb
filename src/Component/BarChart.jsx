@@ -10,8 +10,15 @@ const BarChart = ({graph2Data}) => {
                          id: 1,
                          label: 'Количество руды по классам',
                          data: graph2Data.y,
-                         backgroundColor: 'lightblue',
-                         borderColor:'lightblue',
+                         backgroundColor: [
+                             'rgba(0, 0, 153, 1)',
+                             'rgba(255, 0, 5, 1)',
+                             'rgba(255, 0, 219, 1)',
+                             'rgba(255, 209, 0, 1)',
+                             'rgba(56, 255, 250, 1)',
+                             'rgba(0, 255, 250, 1)',
+                             'rgba(178, 178, 255, 1)',
+                         ],
                          animation: false
                      },
                  ],
