@@ -8,7 +8,7 @@ const BarChart = ({graph2Data}) => {
                  datasets: [
                      {
                          id: 1,
-                         label: 'Кол-во камней в классах',
+                         label: 'Количество руды по классам',
                          data: graph2Data.y,
                          backgroundColor: 'lightblue',
                          borderColor:'lightblue',

@@ -159,9 +159,9 @@ function App() {
             </MainContainer>
             <MainContainer>
                 <GraphPanel>
-                    <LineChart graphData={graphData} Label={"Средний размер камня"} />
+                    <LineChart graphData={graphData} Label={"Средний размер руды"} />
                     <BarChart graph2Data={graph2Data} />
-                    <LineChart graphData={graph3Data} Label={"Максимальный размер камня"} />
+                    <LineChart graphData={graph3Data} Label={"Среднее количество руды"} />
                 </GraphPanel>
             </MainContainer>
         </div>
